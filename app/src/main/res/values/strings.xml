@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Notes</string>
+    <string name="search">Search…</string>
+    <string name="add_note">Add Note</string>
+    <string name="all_notes">All Notes</string>
+    <string name="pinned">Pinned</string>
+    <string name="others">Others</string>
+    <string name="search_notes">Search Notes</string>
+    <string name="image_on_screen">Image on screen</string>
+    <string name="edit_note">Edit Note</string>
+    <string name="back">Back</string>
+    <string name="delete_note">Delete Note</string>
+    <string name="add_photo">Add Photo</string>
+    <string name="title">Title</string>
+    <string name="save_note">Save Note</string>
+    <string name="create_note">Create Note</string>
+    <string name="image_from_gallery">Image from gallery</string>
+    <string name="delete_image">Delete image</string>
+    <string name="note_something">Note something…</string>
+    <string name="just_now">Just now</string>
+
+    <plurals name="hours_ago">
+        <item quantity="one">%d hour ago</item>
+        <item quantity="other">%d hours ago</item>
+    </plurals>
+</resources>

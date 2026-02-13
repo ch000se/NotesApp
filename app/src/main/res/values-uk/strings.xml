@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Notes</string>
+    <string name="search">Пошук…</string>
+    <string name="add_note">Додати нотатку</string>
+    <string name="all_notes">Всі нотатки</string>
+    <string name="pinned">Закріплені</string>
+    <string name="others">Звичайні</string>
+    <string name="search_notes">Пошук нотаток</string>
+    <string name="image_on_screen">Картинка на екрані</string>
+    <string name="edit_note">Редагування нотатки</string>
+    <string name="back">Назад</string>
+    <string name="delete_note">Видалити нотатку</string>
+    <string name="add_photo">Додати картинку</string>
+    <string name="title">Назва</string>
+    <string name="save_note">Зберегти нотатку</string>
+    <string name="create_note">Створити нотатку</string>
+    <string name="image_from_gallery">Картинка з галереї</string>
+    <string name="delete_image">Видалити картинку</string>
+    <string name="note_something">Напиши щось…</string>
+    <string name="just_now">Щойно</string>
+
+    <plurals name="hours_ago">
+        <item quantity="one">%d годину тому</item>
+        <item quantity="few">%d години тому</item>
+        <item quantity="many">%d годин тому</item>
+        <item quantity="other">%d годин тому</item>
+    </plurals>
+</resources>
