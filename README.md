@@ -3,39 +3,41 @@
 A modern Android note-taking application built with Jetpack Compose and Clean Architecture.
 
 ![Android](https://img.shields.io/badge/Android-24+-green.svg)
-![Kotlin](https://img.shields.io/badge/Kotlin-2.0-blue.svg)
-![Compose](https://img.shields.io/badge/Jetpack%20Compose-2024-purple.svg)
+![Kotlin](https://img.shields.io/badge/Kotlin-2.3-blue.svg)
+![Compose](https://img.shields.io/badge/Jetpack%20Compose-2026.01-purple.svg)
 ![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-orange.svg)
 
 ## Features
 
 - **Create & Edit Notes** - Rich content with text and images
-- **Image Support** - Add photos from gallery with automatic storage management
+- **Image Support** - Add photos from gallery with automatic internal storage management
 - **Pin Notes** - Keep important notes at the top (long press to pin/unpin)
 - **Search** - Real-time search through note titles and content
+- **Smart Date Formatting** - Relative timestamps ("just now", "2 hours ago")
 - **Modern UI** - Material Design 3 with custom brown color palette
 - **Offline First** - All data stored locally with Room database
+- **Localization** - English and Ukrainian language support
 
 ## Screenshots
 
-<!-- Add your screenshots here -->
+<!-- Add screenshots to the screenshots/ folder -->
 | Notes List | Create Note | Edit Note |
-|------------|-------------|-----------|
-| Screenshot | Screenshot  | Screenshot |
+|:----------:|:-----------:|:---------:|
+| <img src="screenshots/notes_list.png" width="250"/> | <img src="screenshots/create_note.png" width="250"/> | <img src="screenshots/edit_note.png" width="250"/> |
 
 ## Tech Stack
 
 | Technology | Version | Purpose |
 |------------|---------|---------|
-| **Kotlin** | 2.0 | Programming Language |
-| **Jetpack Compose** | BOM 2024 | Modern UI Toolkit |
+| **Kotlin** | 2.3.0 | Programming Language |
+| **Jetpack Compose** | BOM 2026.01.01 | Modern UI Toolkit |
 | **Material 3** | Latest | Design System |
-| **Room** | 2.6+ | Local Database |
-| **Hilt** | 2.51+ | Dependency Injection |
+| **Room** | 2.8.4 | Local Database |
+| **Hilt** | 2.57.1 | Dependency Injection |
 | **Navigation 3** | 1.0.0 | Type-safe Navigation |
-| **Coil** | 3.0+ | Image Loading |
-| **Kotlin Coroutines** | Latest | Asynchronous Programming |
-| **Kotlin Serialization** | 1.6+ | Data Serialization |
+| **Coil** | 3.3.0 | Image Loading |
+| **Kotlin Serialization** | 1.10.0 | Data Serialization |
+| **Core Splash Screen** | 1.2.0 | Splash Screen API |
 
 ## Architecture
 
@@ -43,10 +45,39 @@ The app follows **Clean Architecture** principles with clear separation of conce
 
 ```
 com.example.notes/
-├── domain/           # Business logic layer
-│   ├── Note.kt                    # Note entity
-│   ├── ContentItem.kt             # Sealed interface (Text/Image)
-│   ├── NotesRepository.kt         # Repository interface
+├── MyApp.kt                    # Hilt-enabled Application class
+│
+├── presentation/               # UI Layer
+│   ├── MainActivity.kt         # Entry point with Splash Screen
+│   ├── screens/
+│   │   ├── notes/              # Notes list screen
+│   │   │   ├── NotesScreen.kt
+│   │   │   └── NotesViewModel.kt
+│   │   ├── creation/           # Create note screen
+│   │   │   ├── CreateNoteScreen.kt
+│   │   │   └── CreateNoteViewModel.kt
+│   │   └── editing/            # Edit note screen
+│   │       ├── EditNoteScreen.kt
+│   │       └── EditNoteViewModel.kt
+│   ├── components/             # Reusable UI components
+│   │   ├── Content.kt          # Mixed content renderer
+│   │   ├── TextContent.kt      # Text input field
+│   │   ├── ImageContent.kt     # Image with delete button
+│   │   └── ImageGroup.kt       # Multiple images layout
+│   ├── navigation/
+│   │   └── NavGraph.kt         # Navigation 3 setup
+│   ├── ui/theme/
+│   │   ├── Theme.kt
+│   │   ├── Color.kt
+│   │   ├── Type.kt
+│   │   └── CustomIcons.kt
+│   └── utils/
+│       └── DateFormatter.kt    # Relative date formatting
+│
+├── domain/                     # Business Logic Layer
+│   ├── Note.kt                 # Core domain model
+│   ├── ContentItem.kt          # Sealed interface (Text/Image)
+│   ├── NotesRepository.kt      # Repository interface
 │   └── usecases/
 │       ├── AddNoteUseCase.kt
 │       ├── EditNoteUseCase.kt
@@ -56,48 +87,18 @@ com.example.notes/
 │       ├── SearchNotesUseCase.kt
 │       └── SwitchPinnedStatusUseCase.kt
 │
-├── data/             # Data layer
-│   ├── NotesDatabase.kt           # Room database
-│   ├── NotesDao.kt                # Data Access Object
-│   ├── NotesRepositoryImpl.kt     # Repository implementation
-│   ├── models/
-│   │   ├── NoteDbModel.kt
-│   │   ├── ContentItemDbModel.kt
-│   │   └── NoteWithContentDbModel.kt
-│   ├── Mapper.kt                  # Domain <-> Data mapping
-│   └── ImageFileManager.kt        # Image storage management
+├── data/                       # Data Layer
+│   ├── NotesDatabase.kt        # Room database (v3)
+│   ├── NotesDao.kt             # Data access with transactions
+│   ├── NotesRepositoryImpl.kt  # Repository implementation
+│   ├── Mapper.kt               # Entity <-> Domain mapping
+│   ├── ImageFileManager.kt     # Image storage management
+│   ├── NoteDbModel.kt
+│   ├── ContentItemDbModel.kt
+│   └── NoteWithContentDbModel.kt
 │
-├── presentation/     # UI layer
-│   ├── screens/
-│   │   ├── notes/                 # Main notes list
-│   │   │   ├── NotesScreen.kt
-│   │   │   ├── NotesViewModel.kt
-│   │   │   ├── NotesState.kt
-│   │   │   └── NotesCommand.kt
-│   │   ├── creation/              # Create note
-│   │   │   ├── CreateNoteScreen.kt
-│   │   │   └── CreateNoteViewModel.kt
-│   │   └── editing/               # Edit note
-│   │       ├── EditNoteScreen.kt
-│   │       └── EditNoteViewModel.kt
-│   ├── components/
-│   │   ├── Content.kt
-│   │   ├── TextContent.kt
-│   │   ├── ImageContent.kt
-│   │   └── ImageGroup.kt
-│   ├── navigation/
-│   │   └── NavGraph.kt            # Navigation 3 setup
-│   ├── ui/theme/
-│   │   ├── Theme.kt
-│   │   ├── Color.kt
-│   │   └── Type.kt
-│   └── utils/
-│       └── DateFormatter.kt
-│
-├── di/               # Dependency Injection
-│   └── AppModule.kt               # Hilt module
-│
-└── MyApp.kt          # Application class
+└── di/
+    └── AppModule.kt            # Hilt module
 ```
 
 ## Design Patterns
@@ -107,8 +108,11 @@ com.example.notes/
 - **Repository Pattern** - Abstraction over data sources
 - **Use Cases** - Single responsibility business logic
 - **Dependency Injection** - Hilt for loose coupling
+- **AssistedFactory** - Parameterized ViewModel injection
 
 ## Database Schema
+
+Room Database v3 with cascade deletion:
 
 ```sql
 -- Notes table
@@ -116,16 +120,16 @@ CREATE TABLE notes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
     updatedAt INTEGER NOT NULL,
-    isPinned INTEGER NOT NULL DEFAULT 0
+    isPinned INTEGER NOT NULL
 );
 
--- Content items table (One-to-Many relationship)
-CREATE TABLE content_items (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+-- Content table (One-to-Many with composite key)
+CREATE TABLE content (
     noteId INTEGER NOT NULL,
-    type TEXT NOT NULL,        -- "text" or "image"
-    text TEXT,
-    imageUrl TEXT,
+    order INTEGER NOT NULL,
+    contentType TEXT NOT NULL,  -- TEXT or IMAGE
+    content TEXT NOT NULL,
+    PRIMARY KEY (noteId, order),
     FOREIGN KEY (noteId) REFERENCES notes(id) ON DELETE CASCADE
 );
 ```
@@ -134,9 +138,9 @@ CREATE TABLE content_items (
 
 ### Prerequisites
 
-- Android Studio Hedgehog (2023.1.1) or newer
+- Android Studio Ladybug (2024.2.1) or newer
 - JDK 17
-- Android SDK 34+
+- Android SDK 35
 
 ### Installation
 
@@ -162,9 +166,6 @@ git clone https://github.com/yourusername/notes.git
 
 # Run tests
 ./gradlew test
-
-# Run lint
-./gradlew lint
 ```
 
 ## Project Configuration
@@ -175,14 +176,13 @@ git clone https://github.com/yourusername/notes.git
 | Target SDK | 35 (Android 15) |
 | Compile SDK | 35 |
 | Java Version | 11 |
-| Kotlin Version | 2.0 |
+| Kotlin Version | 2.3.0 |
 
 ## State Management
 
-The app uses a combination of **StateFlow** and **Channel** for state management:
+The app uses **StateFlow** for state and **Channel** for one-time events:
 
 ```kotlin
-// ViewModel
 class NotesViewModel : ViewModel() {
     private val _state = MutableStateFlow(NotesState())
     val state: StateFlow<NotesState> = _state.asStateFlow()
@@ -198,7 +198,6 @@ class NotesViewModel : ViewModel() {
     }
 }
 
-// Screen
 @Composable
 fun NotesScreen(viewModel: NotesViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -230,7 +229,18 @@ The app supports multiple languages:
 - English (default)
 - Ukrainian (uk)
 
-To add a new language, create `values-{language_code}/strings.xml`.
+Includes proper plural forms for relative date formatting.
+
+## Testing
+
+Testing libraries configured:
+
+| Library | Version | Purpose |
+|---------|---------|---------|
+| JUnit | 4.13.2 | Unit testing |
+| MockK | 1.14.9 | Kotlin mocking |
+| Turbine | 1.2.0 | Flow testing |
+| Truth | 1.4.4 | Assertions |
 
 ## Acknowledgments
 
@@ -242,4 +252,4 @@ To add a new language, create `values-{language_code}/strings.xml`.
 
 ---
 
-Made with Kotlin and Jetpack Compose
+Made with ❤️ using Jetpack Compose
